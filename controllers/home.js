@@ -13,7 +13,7 @@ router.post('/sign-up', (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
-    password_hash: req.body.password
+    hashed_password: req.body.password
   })
   .then(user => {
     req.login(user, () => {

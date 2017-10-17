@@ -1,11 +1,11 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 
 const Users = require('../models').Users;
 
-function passwordsMatch(passwordSubmitted, storedPassword) {
-  return bcrypt.compareSync(passwordSubmitted, storedPassword);
+function checkPassword(submittedPassword, storedPassword) {
+  return bcrypt.compare(submittedPassword, storedPassword);
 }
 
 // Call when user tries to log in
@@ -17,13 +17,12 @@ passport.use(new LocalStrategy({
     Users.findOne({
       where: { email },
     }).then(user => {
-      // In practice you don't want to tell the user their email or password is incorrect
-      // for security purpose.
+      // In practice you don't want to tell the user their email or password is incorrect for security purpose.
       if(!user) {
         return done(null, false, { message: 'Incorrect email.' });
       }
 
-      if (passwordsMatch(password, user.password_hash) === false) {
+      if (checkPassword(password, user.hashed_password) === false) {
         return done(null, false, { message: 'Incorrect password.' });
       }
 
