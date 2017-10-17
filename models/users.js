@@ -9,14 +9,14 @@ module.exports = (sequelize, DataTypes) => {
     password_hash: DataTypes.STRING
   });
 
-  // Runs every time a new user is created to hash the password
-  Users.beforeCreate((user) =>
-    new sequelize.Promise((resolve) => {
+  // Runs every time before a new user is created to hash the password
+  Users.beforeCreate(user =>
+    new sequelize.Promise(resolve => {
       bcrypt.hash(user.password_hash, null, null, (err, hashedPassword) => {
         resolve(hashedPassword);
       });
     })
-    .then((hashedPw) => {
+    .then(hashedPw => {
       user.password_hash = hashedPw;
     })
   );  

@@ -20,10 +20,8 @@ app.use(passport.session());
 
 // Uncomment the following if you want to serve up static assets.
 // (You must create the public folder)
-app.use(express.static('./public'));
+// app.use(express.static('./public'));
 
-// Uncomment the following if you want to use handlebars
-// on the backend. (You must create the views folder)
 const exphbs = require('express-handlebars');
 app.engine('handlebars', exphbs({
   layoutsDir: './views/layouts',

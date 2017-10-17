@@ -10,13 +10,13 @@ function passwordsMatch(passwordSubmitted, storedPassword) {
 
 // Call when user tries to log in
 passport.use(new LocalStrategy({
-    // You can use email or username as usernameField
+    // You can use email or username as usernameField (aka login as username or email)
     usernameField: 'email',
   },
   (email, password, done) => {
     Users.findOne({
       where: { email },
-    }).then((user) => {
+    }).then(user => {
       // In practice you don't want to tell the user their email or password is incorrect
       // for security purpose.
       if(!user) {
@@ -33,8 +33,8 @@ passport.use(new LocalStrategy({
 );
 
 passport.serializeUser((user, done) => {
-  // store user.id into session cookie (express-sessions)
-  // we don't need to store other user info
+  // store user.id into session cookie (express-session)
+  // it's not necessary to store other user info
   done(null, user.id);
 });
 
