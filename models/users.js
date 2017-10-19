@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const saltRounds = 15;
 
 module.exports = (sequelize, DataTypes) => {
   // define() takes a table name and a set of columns
@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   // Runs every time before a new user is created to hash the password
+  // It should check for existing user before creating.
   Users.beforeCreate(user =>
     new sequelize.Promise(resolve => {
       bcrypt.hash(user.hashed_password, saltRounds)
