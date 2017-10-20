@@ -9,16 +9,28 @@ router.get('/sign-up', passport.redirectIfLoggedIn('/profile'), (req, res) => {
 });
 
 router.post('/sign-up', (req, res) => {
-  models.Users.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    hashed_password: req.body.password
+  models.Users.findOne({
+    where: {
+      email: req.body.email
+    }
   })
   .then(user => {
-    req.login(user, () => {
-      res.redirect('/profile');
-    });
+    if(user) {
+      res.send('Email is already taken');
+    }
+    else {
+      models.Users.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        hashed_password: req.body.password
+      })
+      .then(user => {
+        req.login(user, () => {
+          res.redirect('/profile');
+        });
+      });
+    }
   });
 });
 
