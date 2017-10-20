@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   // Runs every time before a new user is created to hash the password
+  // Also it's being created async
   // It should check for existing user before creating.
   Users.beforeCreate(user =>
     new sequelize.Promise(resolve => {

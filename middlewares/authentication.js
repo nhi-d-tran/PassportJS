@@ -5,9 +5,8 @@ const bcrypt = require('bcrypt');
 const Users = require('../models').Users;
 
 function checkPassword(submittedPassword, storedPassword) {
-  // Choose between async or sync password checking
-  // return bcrypt.compare(submittedPassword, storedPassword);
-  return bcrypt.compareSync(submittedPassword, storedPassword);
+  // Returns a Promise
+  return bcrypt.compare(submittedPassword, storedPassword);
 }
 
 // Call when user tries to log in
@@ -24,12 +23,14 @@ passport.use(new LocalStrategy({
         return done(null, false, { message: 'Incorrect email.' });
       }
 
-      // Needs to implement async password checking
-      if (checkPassword(password, user.hashed_password) === false) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-
-      return done(null, user, { message: 'Successfully Logged In!' });
+      // Consume the Promise returns by bcrypt.compare()
+      checkPassword(password, user.hashed_password)
+        .then(valid => {
+          if(!valid) {
+            return done(null, false, { message: 'Incorrect password.' });
+          }
+          return done(null, user, { message: 'Successfully Logged In!' });
+        });
     });
   })
 );
